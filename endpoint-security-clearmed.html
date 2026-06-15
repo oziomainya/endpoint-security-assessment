@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClearMed Clinic: Endpoint Security Assessment and Hardening</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050505'/><text x='50' y='68' font-family='monospace' font-size='48' font-weight='bold' fill='%2300ff41' text-anchor='middle'>OZI</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<script>
+
+  /*
+  ==============================================================
+  YOUR PROJECT DETAILS -- EDIT THIS SECTION ONLY
+  ==============================================================
+  Everything you need to fill in is marked with REPLACE.
+  DO NOT edit anything below the closing comment block.
+  ==============================================================
+  */
+
+  const PROJECT = {
+
+    title:    "ClearMed Clinic: Endpoint Security Assessment and Hardening",
+    category: "cybersecurity",
+    status:   "live",
+    author:   "Ozioma Inya",       // REPLACE with your name
+    date:     "August, 2025",          // REPLACE e.g. "April, 2025"
+
+    overview: "A comprehensive endpoint security assessment and hardening exercise for ClearMed Clinic, a healthcare clinic that experienced a near-miss ransomware incident. Covers threat and vulnerability classification, network security controls, TCP/IP and application layer attacks, wireless security, ACLs and port security, Windows and Linux OS hardening, endpoint protection tools, and cybersecurity principles. Completed as part of the Cisco Networking Academy Junior Cybersecurity Analyst career path.",
+
+    client: {
+      name:     "ClearMed Clinic",
+      industry: "Healthcare",
+      site:     "Single-site clinic: 30 staff including medical, administrative, and IT personnel",
+      task:     "Full endpoint security assessment and hardening following a near-miss ransomware incident",
+      context:  "A phishing email targeting a receptionist workstation almost delivered ransomware to the clinic's network. The file was caught by the ISP's spam filter rather than any internal control. Management commissioned this assessment to understand the clinic's exposure and implement proper endpoint and network security controls before a real incident occurs.",
+    },
+
+    objectives: [
+      "Classify the threats, vulnerabilities, and attack types most relevant to a healthcare clinic",
+      "Configure network security controls on the clinic router and switch in Cisco Packet Tracer",
+      "Identify and document TCP/IP foundation attacks that could affect clinic infrastructure",
+      "Identify and document application and service attacks targeting clinic systems and staff",
+      "Configure and verify wireless security on the clinic guest and staff Wi-Fi networks",
+      "Implement ACLs and port security on the clinic network infrastructure",
+      "Assess and document Windows workstation hardening measures for clinic workstations",
+      "Assess and document Linux server hardening measures for the clinic's Ubuntu server",
+      "Define an endpoint protection strategy covering antivirus, EDR, and patch management",
+      "Apply cybersecurity principles and a defence-in-depth strategy across the clinic environment",
+    ],
+
+    tools: [
+      { name: "Cisco Packet Tracer",    purpose: "Network topology simulation: ACLs, port security, wireless" },
+      { name: "Cisco IOS CLI",          purpose: "Router and switch security configuration" },
+      { name: "Windows OS (documented)", purpose: "Workstation hardening assessment and documentation" },
+      { name: "Linux CLI (documented)", purpose: "Ubuntu server hardening assessment and documentation" },
+      { name: "ICMP Ping",              purpose: "ACL and connectivity verification" },
+    ],
+
+    skills: [
+      "Threat Classification", "Vulnerability Assessment", "Attack Taxonomy",
+      "Network Security Controls", "TCP/IP Attack Mitigation", "Application Layer Security",
+      "Wireless Security", "WPA2 Enterprise", "ACLs", "Port Security",
+      "Windows Hardening", "Windows Event Viewer", "Local Security Policy",
+      "Linux Hardening", "UFW Firewall", "File Permissions", "Service Management",
+      "Antivirus", "EDR", "HIPS", "Patch Management", "Defence in Depth",
+      "CIA Triad", "Security Policies", "Cisco IOS CLI", "Packet Tracer",
+    ],
+
+    parts: [
+      {
+        id:      "PART 01",
+        modules: "",
+        title:   "Threat and Vulnerability Assessment for ClearMed Clinic",
+        type:    "doc",
+        desc:    "Conducted a structured threat and vulnerability assessment for ClearMed Clinic, identifying the specific threats, vulnerabilities, and attack types most relevant to a healthcare environment.",
+        content: [
+          {
+            heading: "Why Healthcare Is a High-Value Target",
+            body: "Healthcare organisations hold some of the most sensitive personal data; medical records, prescriptions, payment information, and patient identifiers. Under GDPR and NHS data protection requirements, a breach carries significant regulatory consequences. Ransomware groups specifically target healthcare because operational pressure, the need to access patient records immediately, makes clinics more likely to pay. The 2017 WannaCry attack on the NHS demonstrated the sector's vulnerability: thousands of appointments were cancelled because workstations running unpatched Windows XP were encrypted.",
+          },
+          {
+            heading: "Threats Specific to ClearMed Clinic",
+            body: "Three threat categories are most relevant. Ransomware: the near-miss incident demonstrates an active targeting of the clinic. Ransomware encrypts patient records, appointment systems, and prescription databases making clinical operations impossible until payment or recovery. Phishing: the delivery mechanism for the near-miss was a phishing email targeting a non-technical staff member (receptionist). Healthcare staff are not IT professionals and are susceptible to social engineering. Insider threat: clinical staff with access to patient records may intentionally or accidentally expose data through misuse of USB drives, personal email, or poor password practices.",
+          },
+          {
+            heading: "Vulnerability Classification",
+            body: "A vulnerability is a weakness that can be exploited by a threat. Three vulnerability categories were identified at ClearMed Clinic. Software vulnerabilities: workstations running outdated Windows versions with unpatched operating systems and applications. Configuration vulnerabilities: no ACLs on the clinic router, no port security on the switch, default admin credentials on network devices. Human vulnerabilities: staff with no cybersecurity awareness training, no phishing simulation programme, and no clear procedure for reporting suspicious emails.",
+          },
+          {
+            heading: "Attack Types Relevant to the Clinic",
+            body: "Malware: ransomware and trojans delivered via phishing. Social engineering: phishing, pretexting calls impersonating NHS or insurance bodies. Network attacks: ARP poisoning on the internal LAN could redirect clinic traffic. DoS: a motivated attacker could disrupt appointment booking systems. Physical: USB drives dropped in the car park or waiting room could deliver malware if plugged into a workstation. The risk profile of each attack type was assessed against likelihood and impact to prioritise remediation.",
+          },
+        ],
+      },
+      {
+        id:      "PART 02",
+        modules: "",
+        title:   "Clinic Network Security Configuration",
+        type:    "lab",
+        desc:    "Configured baseline network security controls on Clinic-R1 and Clinic-SW1 in Cisco Packet Tracer. Applied device hardening, management access controls, and initial access restrictions to secure the clinic network infrastructure.",
+        code: `Clinic-R1> enable
+Clinic-R1# configure terminal
+Clinic-R1(config)# hostname Clinic-R1
+Clinic-R1(config)# banner motd # ClearMed Clinic - Authorised access only. All activity logged. #
+Clinic-R1(config)# enable secret ClearMed!R1
+Clinic-R1(config)# service password-encryption
+
+-- Restrict console access
+Clinic-R1(config)# line console 0
+Clinic-R1(config-line)# password Console!2024
+Clinic-R1(config-line)# login
+Clinic-R1(config-line)# exec-timeout 5 0
+Clinic-R1(config-line)# exit
+
+-- Restrict VTY to SSH only
+Clinic-R1(config)# ip domain-name clearmed.local
+Clinic-R1(config)# username admin secret SSH!Admin2024
+Clinic-R1(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+Clinic-R1(config)# ip ssh version 2
+Clinic-R1(config)# line vty 0 15
+Clinic-R1(config-line)# transport input ssh
+Clinic-R1(config-line)# login local
+Clinic-R1(config-line)# exec-timeout 5 0
+Clinic-R1(config-line)# exit
+
+-- Disable unused services
+Clinic-R1(config)# no cdp run
+Clinic-R1(config)# end
+Clinic-R1# copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+
+-- Verify security settings
+Clinic-R1# show running-config | include secret
+enable secret 5 $1$mERr$0V7HtgTA4KI4xRTyeAR3Y.
+username admin secret 5 $1$mERr$5FjovNLr95um932GuuaEb0
+
+Clinic-R1# show ip ssh
+SSH Enabled - version 2.0
+Authentication timeout: 120 secs; Authentication retries: 3`,
+      },
+      {
+        id:      "PART 03",
+        modules: "",
+        title:   "TCP/IP Foundation Attacks Affecting the Clinic",
+        type:    "doc",
+        desc:    "Documented the TCP/IP foundation attacks most likely to affect ClearMed Clinic, with explanation of how each works and the specific mitigation applied.",
+        content: [
+          {
+            heading: "IP Spoofing",
+            body: "IP spoofing forges the source IP address in a packet header to impersonate a trusted host or disguise the origin of an attack. In the clinic context, an attacker on the local LAN could spoof the IP of the admin workstation to bypass IP-based access controls. Mitigation: ingress filtering on Clinic-R1 using ACLs to block packets arriving on internal interfaces with external source addresses (RFC 2827 BCP38). Port security on Clinic-SW1 to limit MAC address spoofing at the access layer.",
+          },
+          {
+            heading: "ARP Poisoning",
+            body: "ARP poisoning sends gratuitous ARP replies that associate the attacker's MAC address with a legitimate IP, such as the default gateway. All traffic intended for the gateway is redirected through the attacker's machine, enabling a man-in-the-middle attack. On the clinic LAN, ARP poisoning could allow an attacker to intercept patient data in transit or inject malicious content into unencrypted sessions. Mitigation: Dynamic ARP Inspection (DAI) on managed switches. HTTPS everywhere to encrypt traffic even if intercepted. Static ARP entries for critical devices.",
+          },
+          {
+            heading: "TCP SYN Flood",
+            body: "A TCP SYN flood sends a large volume of SYN packets without completing the three-way handshake, exhausting the target's connection table. For the clinic's appointment booking system, a SYN flood could render the system unavailable during a critical period. Mitigation: TCP intercept on Cisco IOS monitors TCP connections and drops half-open connections that exceed a threshold. Rate limiting on the WAN interface restricts the volume of connection attempts from outside.",
+          },
+          {
+            heading: "DNS Spoofing",
+            body: "DNS spoofing injects false DNS records to redirect users to attacker-controlled websites. A clinic staff member trying to access the online prescription management portal could be redirected to a credential-harvesting site. Mitigation: DNSSEC validates DNS responses using digital signatures. Use of trusted DNS resolvers (not ISP-default). Staff awareness training to verify URLs before entering credentials.",
+          },
+        ],
+      },
+      {
+        id:      "PART 04",
+        modules: "",
+        title:   "Application and Service Attacks on Clinic Systems",
+        type:    "doc",
+        desc:    "Documented application-layer attacks targeting the services and systems used by ClearMed Clinic, with specific mitigations for each.",
+        content: [
+          {
+            heading: "Phishing and Spear Phishing",
+            body: "The near-miss incident was a phishing attack. Generic phishing sends mass emails; spear phishing targets specific individuals. For a healthcare clinic, spear phishing emails commonly impersonate NHS communications, insurance providers, medical suppliers, or internal IT. The receptionist who received the near-miss email is in a high-risk role, she handles external communications and is not IT-trained. Mitigation: Email filtering with anti-phishing detection. Staff awareness training with simulated phishing exercises. DMARC, DKIM, and SPF email authentication to reduce spoofed sender addresses.",
+          },
+          {
+            heading: "Ransomware Delivery and Execution",
+            body: "Ransomware is typically delivered via phishing attachments or malicious links. Once executed, it enumerates accessible file shares and encrypts files. In a healthcare environment, ransomware targeting patient record databases (Microsoft Access, SQL Server) is particularly damaging because clinical operations depend on immediate access. Double extortion ransomware exfiltrates records before encryption and threatens to publish patient data publicly, a GDPR breach with severe regulatory consequences. Mitigation: Application whitelisting prevents unauthorised executables from running. Least privilege limits which files ransomware can reach. Offline backups break the encryption leverage.",
+          },
+          {
+            heading: "SQL Injection Against Clinic Databases",
+            body: "If the clinic uses a web-based patient management system, SQL injection attacks could be used to extract or manipulate patient records directly from the database. Even a simple unauthenticated login bypass via SQL injection (entering ' OR 1=1 in a login field) could grant an attacker full access to the patient database. Mitigation: Parameterised queries in all web applications. Input validation and sanitisation. Web application firewall (WAF) in front of any patient-facing web application.",
+          },
+          {
+            heading: "HTTP vs HTTPS",
+            body: "Any clinic web application or portal served over HTTP transmits data in plaintext, including patient login credentials and record contents. An attacker performing a man-in-the-middle attack on the clinic LAN could capture this data passively. Mitigation: All clinic web applications must use HTTPS with valid TLS certificates. HTTP should be redirected to HTTPS. HSTS (HTTP Strict Transport Security) prevents browsers from falling back to HTTP.",
+          },
+        ],
+      },
+      {
+        id:      "PART 05",
+        modules: "",
+        title:   "Clinic Wireless Network Security Configuration",
+        type:    "lab",
+        desc:    "Configured two separate wireless networks using two access points: a staff network with WPA2-PSK and a guest network for patients in the waiting room. The two networks are isolated from each other. Guest network clients cannot access the clinic LAN. Staff network uses a strong passphrase and is not broadcast publicly.",
+        code: `Wireless Network Configuration -- ClearMed Clinic:
+
+  STAFF NETWORK:
+    SSID:           ClearMed-Staff
+    Broadcast SSID: Disabled (hidden network)
+    Band:           5 GHz
+    Security:       WPA2-PSK (AES)
+    Passphrase:     ClearMed!Staff2024
+    DHCP Range:     192.168.10.100 - 192.168.10.150
+    Gateway:        192.168.10.1
+    VLAN:           VLAN 10 (staff)
+
+  GUEST NETWORK:
+    SSID:           ClearMed-Guest
+    Broadcast SSID: Enabled
+    Band:           2.4 GHz
+    Security:       WPA2-PSK (AES)
+    Passphrase:     Welcome2ClearMed
+    DHCP Range:     192.168.20.100 - 192.168.20.200
+    Gateway:        192.168.20.1
+    VLAN:           VLAN 20 (guest -- isolated)
+    Client Isolation: Enabled (guests cannot communicate with each other)
+    LAN Access:     Denied (guests cannot reach 192.168.1.0/24 clinic LAN)
+
+  SECURITY DECISIONS:
+    - Staff SSID hidden: reduces opportunistic connection attempts
+    - Separate VLANs: guest traffic never reaches clinical systems
+    - Client isolation on guest: prevents patient-to-patient attacks
+    - 5GHz for staff: shorter range reduces outside signal bleed
+    - WPA2-PSK minimum: WPA3 preferred if hardware supports it
+
+  Verification:
+    Staff laptop connected to ClearMed-Staff -> 192.168.10.100 assigned
+    Patient phone connected to ClearMed-Guest -> 192.168.20.100 assigned
+    Patient phone ping 192.168.1.10 (clinic workstation) -> BLOCKED`,
+      },
+      {
+        id:      "PART 06",
+        modules: "",
+        title:   "ACLs and Port Security Implementation",
+        type:    "lab",
+        desc:    "Configured ACLs on Clinic-R1 to restrict traffic between network segments and block known malicious traffic patterns. Configured port security on Clinic-SW1 to prevent unauthorised devices from connecting to clinic switch ports. These controls directly address the vulnerability gap identified in Part 01.",
+        code: `-- ACL: Block guest VLAN from reaching clinic LAN
+Clinic-R1(config)# ip access-list extended GUEST_RESTRICTION
+Clinic-R1(config-ext-nacl)# deny ip 192.168.20.0 0.0.0.255 192.168.1.0 0.0.0.255
+Clinic-R1(config-ext-nacl)# deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+Clinic-R1(config-ext-nacl)# permit ip 192.168.20.0 0.0.0.255 any
+Clinic-R1(config-ext-nacl)# exit
+
+-- ACL: Permit only HTTPS and DNS from clinic LAN to internet
+Clinic-R1(config)# ip access-list extended CLINIC_OUTBOUND
+Clinic-R1(config-ext-nacl)# permit tcp 192.168.1.0 0.0.0.255 any eq 443
+Clinic-R1(config-ext-nacl)# permit udp 192.168.1.0 0.0.0.255 any eq 53
+Clinic-R1(config-ext-nacl)# permit tcp 192.168.1.0 0.0.0.255 any eq 80
+Clinic-R1(config-ext-nacl)# deny ip any any
+Clinic-R1(config-ext-nacl)# exit
+
+Clinic-R1(config)# interface GigabitEthernet0/0.1
+Clinic-R1(config-if)# ip access-group CLINIC_OUTBOUND out
+Clinic-R1(config-if)# exit
+Clinic-R1(config)# interface GigabitEthernet0/0.20
+Clinic-R1(config)# ip access-group GUEST_RESTRICTION in
+Clinic-R1(config)# exit
+
+-- Port security on workstation ports
+Clinic-SW1(config)# interface range FastEthernet0/1-5
+Clinic-SW1(config-if-range)# switchport mode access
+Clinic-SW1(config-if-range)# switchport port-security
+Clinic-SW1(config-if-range)# switchport port-security maximum 1
+Clinic-SW1(config-if-range)# switchport port-security mac-address sticky
+Clinic-SW1(config-if-range)# switchport port-security violation restrict
+Clinic-SW1(config-if-range)# exit
+
+-- Shutdown unused ports
+Clinic-SW1(config)# interface range FastEthernet0/6-24, GigabitEthernet0/2
+Clinic-SW1(config-if-range)# shutdown
+Clinic-SW1(config-if-range)# exit
+Clinic-SW1(config)# end
+Clinic-SW1# copy running-config startup-config 
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+
+-- Verify port security
+Clinic-SW1# show port-security 
+Secure Port MaxSecureAddr CurrentAddr SecurityViolation Security Action
+               (Count)       (Count)        (Count)
+--------------------------------------------------------------------
+        Fa0/1        1          0                 0         Restrict
+        Fa0/2        1          0                 0         Restrict
+        Fa0/3        1          0                 0         Restrict
+        Fa0/4        1          0                 0         Restrict
+        Fa0/5        1          0                 0         Restrict
+----------------------------------------------------------------------
+
+-- Verify ACL hit counts
+Clinic-R1# show ip access-lists GUEST_RESTRICTION
+Extended IP access list GUEST_RESTRICTION
+    deny ip 192.168.20.0 0.0.0.255 192.168.1.0 0.0.0.255 (4 match(es))
+    deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255 (4 match(es))
+    permit ip 192.168.20.0 0.0.0.255 any`,
+      },
+      {
+        id:      "PART 07",
+        modules: "",
+        title:   "Windows Workstation Hardening",
+        type:    "doc",
+        desc:    "Documented the Windows security hardening measures applied to clinic workstations. All workstations run Windows 10 Pro. The near-miss incident occurred on a workstation with default settings and no local security policy configured.",
+        content: [
+          {
+            heading: "Account and Password Policy",
+            body: "Windows Local Security Policy (secpol.msc) was configured on all workstations. Password minimum length set to 12 characters. Password complexity enabled (uppercase, lowercase, numbers, symbols required). Maximum password age set to 90 days. Account lockout threshold set to 5 failed attempts with a 30-minute lockout duration. This prevents brute force attacks against local accounts and limits the damage from credential theft.",
+          },
+          {
+            heading: "Windows Defender and Firewall",
+            body: "Windows Defender Antivirus was verified as active and updated on all workstations. Real-time protection, cloud-delivered protection, and automatic sample submission were enabled. Windows Defender Firewall was verified as active on all three profiles (Domain, Private, Public). Inbound rules were reviewed; only Remote Desktop (limited to admin subnet only) and file sharing (limited to internal LAN) were permitted. All other inbound connections were blocked by default.",
+          },
+          {
+            heading: "Windows Event Viewer and Logging",
+            body: "Windows Event Viewer was used to review security event logs on the near-miss workstation. Event ID 4625 (failed logon) showed 47 failed login attempts from an internal IP the night before the phishing email arrived, suggesting a prior unauthorised access attempt. Event ID 4688 (process creation) was enabled via Group Policy to log all process executions. This logging is essential for forensic investigation following an incident and would have provided evidence of the ransomware execution had it succeeded.",
+          },
+          {
+            heading: "Application Control and Updates",
+            body: "Windows Update was set to automatic on all workstations, a critical control given that the WannaCry ransomware exploited an unpatched SMB vulnerability that had a patch available for two months before the attack. Software Restriction Policies were configured to block executables from running from user profile directories (AppData, Temp), the most common locations ransomware drops and executes payloads. USB AutoRun was disabled via Group Policy to prevent malware execution from removable media.",
+          },
+        ],
+      },
+      {
+        id:      "PART 08",
+        modules: "",
+        title:   "Linux Server Hardening",
+        type:    "doc",
+        desc:    "Documented the hardening measures applied to the clinic's Ubuntu 22.04 LTS server, which hosts the patient appointment database and internal file share.",
+        content: [
+          {
+            heading: "User Account and SSH Hardening",
+            body: "Default root SSH login was disabled in /etc/ssh/sshd_config (PermitRootLogin no). SSH password authentication was disabled in favour of key-based authentication (PasswordAuthentication no). A dedicated non-root service account was created for the database application. The principle of least privilege was applied, no user account has more permissions than required for its function. The sudo log (/var/log/auth.log) was reviewed to confirm no unexpected privilege escalation had occurred.",
+          },
+          {
+            heading: "UFW Firewall Configuration",
+            body: "Ubuntu's Uncomplicated Firewall (UFW) was enabled and configured with a default-deny inbound policy. Only required services were permitted: SSH (port 22) restricted to the admin subnet (192.168.1.x), the database application port (3306 for MySQL) restricted to the application server IP only, and HTTPS (port 443) for the internal appointment portal. All other inbound traffic is dropped. UFW status was verified with sudo ufw status verbose.",
+          },
+          {
+            heading: "File Permissions and Sensitive Data",
+            body: "Patient record files and database directories were reviewed for correct permissions. World-readable permissions (chmod 777) were found on two directories and corrected to 750 (owner read/write/execute, group read/execute, others no access). The database configuration file containing credentials was set to 600 (owner read/write only). The find command was used to locate SUID binaries: find / -perm -u=s -type f 2>/dev/null, any unexpected SUID binaries were investigated as potential privilege escalation vectors.",
+          },
+          {
+            heading: "Service Management and Updates",
+            body: "All running services were reviewed with systemctl list-units -type=service -state=running. Several unnecessary services were identified and disabled: cups (printing daemon; not needed on a server), avahi-daemon (mDNS; not needed), and bluetooth. Unattended security updates were enabled via unattended-upgrades to ensure critical patches are applied automatically. The last update history was reviewed with /var/log/apt/history.log, the server had not been updated in 4 months prior to this assessment.",
+          },
+        ],
+      },
+      {
+        id:      "PART 09",
+        modules: "",
+        title:   "Endpoint Protection Strategy for ClearMed Clinic",
+        type:    "doc",
+        desc:    "Defined a layered endpoint protection strategy for ClearMed Clinic covering antivirus, EDR, host-based intrusion prevention, and patch management.",
+        content: [
+          {
+            heading: "Antivirus and Endpoint Protection Platform (EPP)",
+            body: "An Endpoint Protection Platform (EPP) provides signature-based detection, behavioural analysis, and real-time scanning. For ClearMed Clinic, Windows Defender (already licensed as part of Windows 10 Pro) provides adequate EPP for workstations when properly configured. The Ubuntu server requires a separate Linux antivirus solution. ClamAV was deployed for scheduled scanning of uploaded files and email attachments. EPP alone is insufficient as it detects known malware but misses novel variants. A second layer is required.",
+          },
+          {
+            heading: "Endpoint Detection and Response (EDR)",
+            body: "EDR tools provide continuous monitoring of endpoint activity, recording process creation, file modifications, network connections, and registry changes. Unlike EPP which blocks known threats, EDR detects suspicious behaviour patterns that indicate compromise. For the near-miss incident, an EDR solution would have recorded the phishing email attachment's execution attempt, the process it tried to spawn, and the network connections it attempted providing forensic evidence and enabling faster containment. For a clinic of ClearMed's size, a managed EDR service from an MSSP is the most cost-effective option.",
+          },
+          {
+            heading: "Host-Based Intrusion Prevention System (HIPS)",
+            body: "A HIPS monitors and controls system calls, application behaviour, and network activity at the host level. It can block suspicious actions such as a word processor spawning a command shell (a common ransomware delivery technique) even if the malware is unknown to the antivirus engine. HIPS rules can be configured to specifically block the behaviours most common in ransomware: mass file encryption, shadow copy deletion, and outbound connections to Tor exit nodes.",
+          },
+          {
+            heading: "Patch Management",
+            body: "Unpatched software is the root cause of many successful attacks. ClearMed Clinic's server had not been patched in 4 months, a significant risk given that critical CVEs are disclosed regularly. A formal patch management process was recommended: assess patches within 7 days of release, test in a non-production environment, deploy critical patches within 14 days, and deploy standard patches within 30 days. Windows Update for Business was configured to deploy security patches automatically to workstations. The Ubuntu server was enrolled in unattended-upgrades for security updates only.",
+          },
+        ],
+      },
+      {
+        id:      "PART 10",
+        modules: "",
+        title:   "Defence in Depth and Security Framework for the Clinic",
+        type:    "doc",
+        desc:    "Applied cybersecurity principles and a defence-in-depth strategy to consolidate all hardening measures into a coherent security framework for ClearMed Clinic.",
+        content: [
+          {
+            heading: "Defence in Depth",
+            body: "Defence in depth layers multiple security controls so that if one fails, others remain. For ClearMed Clinic, the layers are: Perimeter (Clinic-R1 with ACLs and firewall rules blocks external threats at the network edge), Network (Clinic-SW1 with port security and VLANs limits lateral movement and unauthorised device connections), Endpoint (Windows Defender, HIPS, application control on workstations prevents malware execution), Data (encryption at rest and in transit protects patient records even if endpoints are compromised), and Human (staff awareness training, phishing simulation addresses the social engineering vector that caused the near-miss).",
+          },
+          {
+            heading: "The CIA Triad Applied to Patient Data",
+            body: "Confidentiality: patient records are encrypted at rest and in transit. Access is controlled by role; receptionists see appointment data, not clinical notes. Integrity: database backups with hash verification ensure records have not been tampered with. Audit logs record all access and modification events. Availability: the 3-2-1 backup strategy ensures records can be restored after a ransomware attack. Redundant internet connectivity ensures the appointment booking system remains accessible during ISP outages.",
+          },
+          {
+            heading: "Security Policies Implemented",
+            body: "Five policies were implemented following this assessment: Acceptable Use Policy (defines permitted use of clinic systems and consequences for violations), Password and MFA Policy (mandates strong passwords and MFA on all systems handling patient data), Incident Response Policy (defines the six-phase response process and the 72-hour GDPR notification requirement), Data Classification Policy (classifies patient records, staff data, and operational data with handling requirements for each), and Remote Access Policy (mandates VPN for any access to clinic systems from outside the building).",
+          },
+          {
+            heading: "Ongoing Security Practices",
+            body: "Security is not a one-time configuration. It requires ongoing practices. Quarterly: simulated phishing exercises for all staff, review of firewall rule hits and denied traffic logs, vulnerability scan of all systems. Annually: penetration test by an external provider, staff security awareness training refresh, review and update of all security policies. Continuous: patch management cycle, EDR alert monitoring, backup integrity testing. The near-miss incident became the catalyst for building a security programme that ClearMed Clinic lacked entirely before this assessment.",
+          },
+        ],
+      },
+    ],
+
+    results: [
+      { type: "success", text: "Clinic-R1 and Clinic-SW1 fully hardened; SSH v2, encrypted passwords, disabled unnecessary services." },
+      { type: "success", text: "ACL GUEST_RESTRICTION confirmed blocking guest VLAN from reaching clinic LAN." },
+      { type: "success", text: "ACL CLINIC_OUTBOUND confirmed permitting HTTPS and DNS while denying all other outbound traffic." },
+      { type: "success", text: "Port security active on all workstation ports with sticky MACs learned and locked." },
+      { type: "success", text: "Wireless networks correctly isolated with guest clients confirmed unable to reach 192.168.1.0/24." },
+      { type: "success", text: "Windows Event Viewer review identified 47 failed logon attempts preceding the phishing email." },
+      { type: "success", text: "Linux server world-readable permissions corrected and unnecessary services disabled." },
+      { type: "warning", text: "Initial ACL CLINIC_OUTBOUND blocked DNS. DNS uses UDP 53 which was not included in the first version." },
+      { type: "fix",     text: "Added permit udp 192.168.1.0 0.0.0.255 any eq 53 to the ACL and DNS resolution restored." },
+      { type: "warning", text: "Guest network clients could initially reach the clinic LAN because GUEST_RESTRICTION ACL was applied inbound on wrong interface." },
+      { type: "fix",     text: "Moved ACL application to the correct interface direction and guest isolation confirmed with ping test." },
+    ],
+
+    lessons: [
+      {
+        title: "A near-miss is a gift. Most organisations never get one",
+        text:  "The phishing email that triggered this assessment was caught by luck, not design. ClearMed Clinic had no controls that would have stopped it internally. The near-miss created the organisational will to invest in security that a theoretical risk assessment alone would not have achieved. Every control implemented in this project was absent before the incident.",
+      },
+      {
+        title: "Logging is forensic evidence. Enable it before you need it",
+        text:  "Event ID 4625 (failed logon) on the workstation revealed a prior access attempt that predated the phishing email, suggesting a coordinated attack. Without event logging enabled, this evidence would not have existed. Enabling process creation logging (Event ID 4688) provides the timeline of execution events needed to reconstruct what happened during an incident.",
+      },
+      {
+        title: "Linux servers need hardening too",
+        text:  "The Ubuntu server had world-readable permissions on patient record directories, unnecessary services running, and a 4-month patch gap. Linux is not inherently secure. iI requires the same structured hardening process as Windows. The default installation is a starting point, not a finished product.",
+      },
+      {
+        title: "Defence in depth means accepting that each layer will sometimes fail",
+        text:  "No single control stops every attack. The ACL will be bypassed by an attacker on the internal LAN. The antivirus will miss novel malware. The firewall will not stop phishing. Defence in depth works because the attacker must defeat multiple independent controls simultaneously, making a successful attack significantly harder even if individual controls are imperfect.",
+      },
+      {
+        title: "Guest Wi-Fi isolation is non-negotiable in healthcare",
+        text:  "Patients in the waiting room connecting to the same Wi-Fi network as clinical workstations is a serious risk. Even without malicious intent, a patient device carrying malware could pivot to clinical systems. VLAN isolation and client isolation on the guest network cost nothing to configure and completely eliminate this exposure.",
+      },
+    ],
+
+    githubLink:     "https://github.com/endpoint-security-assessment",   // REPLACE with GitHub repo URL when ready
+    portfolioLink:  "https://oziomainya.github.io",   // REPLACE with portfolio URL when ready
+    authorLinkedIn: "https://linkedin.com/in/ozioma-inya-a46327304",   // REPLACE with LinkedIn URL when ready
+
+  };
+
+  /*
+  ==============================================================
+  DO NOT EDIT BELOW THIS COMMENT BLOCK
+  ==============================================================
+  */
+
+</script>
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050505;--bg-2:#0c0c0c;--bg-card:#0f0f0f;--bg-code:#080808;
+  --green:#00ff41;--green-d:#00b32d;--green-dk:#001f08;
+  --cyan:#00e5ff;--cyan-d:#00a8c0;
+  --amber:#ffd600;--red:#ff4444;--text:#ccffcc;
+  --text-2:#5a8f5a;--text-m:#2a4a2a;
+  --border:rgba(0,255,65,.09);--border-s:rgba(0,255,65,.22);
+  --font:'JetBrains Mono','Courier New',monospace
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.7;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,.02) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.1) 2px,rgba(0,0,0,.1) 4px);pointer-events:none;z-index:999}
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(5,5,5,.97);border-bottom:1px solid var(--border);padding:0 2.5rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-back{color:var(--text-2);text-decoration:none;font-size:11px;letter-spacing:.1em;transition:color .2s}
+.nav-back::before{content:'<- ';color:var(--text-m)}
+.nav-back:hover{color:var(--green)}
+.nav-id{color:var(--text-m);font-size:11px;letter-spacing:.1em}
+main{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:6rem 2.5rem 5rem}
+.proj-header{margin-bottom:4rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border)}
+.proj-meta{display:flex;align-items:center;gap:.65rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.meta-cat{font-size:9px;letter-spacing:.15em;padding:3px 10px;border-radius:2px;background:rgba(0,229,255,.06);color:var(--cyan-d);border:1px solid rgba(0,229,255,.2)}
+.meta-status{font-size:9px;letter-spacing:.12em;display:inline-flex;align-items:center;gap:5px}
+.meta-status::before{content:'';width:6px;height:6px;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+.meta-status.live{color:var(--green)}.meta-status.live::before{background:var(--green)}
+.meta-status.wip{color:var(--cyan)}.meta-status.wip::before{background:var(--cyan)}
+.meta-status.soon{color:var(--amber)}.meta-status.soon::before{background:var(--amber)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.meta-source{font-size:9px;letter-spacing:.08em;padding:3px 10px;border-radius:2px;background:rgba(0,229,255,.05);color:var(--cyan-d);border:1px solid rgba(0,229,255,.15)}
+.meta-date{font-size:10px;color:var(--text-m)}
+.proj-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;color:var(--green);letter-spacing:-.02em;margin-bottom:1rem;line-height:1.2}
+.proj-overview{font-size:13px;color:var(--text-2);line-height:2;max-width:640px}
+.proj-actions{display:flex;gap:.75rem;margin-top:2rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.2rem;font-family:var(--font);font-size:11px;letter-spacing:.1em;cursor:pointer;transition:all .18s;text-decoration:none;border-radius:2px}
+.btn-p{background:var(--green-dk);color:var(--green);border:1px solid rgba(0,255,65,.3)}
+.btn-p:hover{background:var(--green);color:#030d06}
+.btn-s{background:transparent;color:var(--text-2);border:1px solid var(--border-s)}
+.btn-s:hover{color:var(--cyan);border-color:rgba(0,229,255,.3)}
+.section{margin-bottom:3.5rem}
+.sh{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;color:var(--text-2);font-size:12px;letter-spacing:.1em}
+.sh::before{content:'$';color:var(--green);font-size:14px;font-weight:700}
+.sh::after{content:'';flex:1;height:1px;background:var(--border)}
+.client-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:1.5rem;margin-bottom:1rem}
+.client-row{display:flex;justify-content:space-between;font-size:11px;padding:.4rem 0;border-bottom:1px solid var(--border)}
+.client-row:last-child{border-bottom:none}
+.client-label{color:var(--text-m);letter-spacing:.08em}
+.client-val{color:var(--text-2);text-align:right;max-width:65%}
+.client-trigger{background:rgba(255,214,0,.04);border:1px solid rgba(255,214,0,.12);border-radius:3px;padding:.85rem 1.1rem;font-size:11px;color:var(--text-2);line-height:1.9;margin-top:.75rem}
+.client-trigger-label{font-size:9px;color:var(--amber);letter-spacing:.12em;margin-bottom:.35rem}
+.obj-list{display:flex;flex-direction:column;gap:.6rem}
+.obj-item{display:flex;align-items:flex-start;gap:.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:.85rem 1.1rem;font-size:12px;color:var(--text-2);transition:border-color .2s}
+.obj-item:hover{border-color:var(--border-s)}
+.obj-num{color:var(--text-m);flex-shrink:0;min-width:22px}
+.tools-table{width:100%;border-collapse:collapse;font-size:12px}
+.tools-table th{text-align:left;padding:.6rem 1rem;color:var(--text-m);font-weight:400;font-size:10px;letter-spacing:.1em;border-bottom:1px solid var(--border)}
+.tools-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border);color:var(--text-2)}
+.tools-table tr:last-child td{border-bottom:none}
+.tools-table tr:hover td{color:var(--text)}
+.tool-name{color:var(--green);font-weight:500}
+.tags-wrap{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{display:inline-block;padding:3px 10px;font-size:10px;border-radius:2px;letter-spacing:.04em;background:rgba(0,229,255,.05);color:var(--cyan-d);border:1px solid rgba(0,229,255,.14)}
+.topo-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:1.5rem;overflow-x:auto}
+.topo-diagram{font-size:11px;color:var(--green-d);line-height:2.1;white-space:pre;font-family:var(--font);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.topo-table{width:100%;border-collapse:collapse;font-size:11px}
+.topo-table th{text-align:left;padding:.5rem .85rem;color:var(--text-m);font-weight:400;font-size:10px;letter-spacing:.1em;border-bottom:1px solid var(--border)}
+.topo-table td{padding:.6rem .85rem;border-bottom:1px solid var(--border);color:var(--text-2)}
+.topo-table tr:last-child td{border-bottom:none}
+.topo-hl{color:var(--green) !important;font-weight:500}
+.topo-ip{color:var(--cyan-d) !important}
+.topo-sec{color:var(--amber) !important;font-size:9px;letter-spacing:.08em;font-weight:700}
+.part{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:1.25rem;transition:border-color .2s}
+.part:hover{border-color:var(--border-s)}
+.part-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.part-id{font-size:9px;color:var(--text-m);letter-spacing:.15em;margin-bottom:.2rem}
+.part-modules{font-size:9px;color:var(--cyan-d);letter-spacing:.06em;margin-bottom:.4rem}
+.part-title{font-size:13px;font-weight:700;color:var(--green)}
+.part-body{padding:1rem 1.25rem}
+.part-desc{font-size:12px;color:var(--text-2);line-height:1.9;margin-bottom:.75rem}
+.part-code{background:var(--bg-code);border:1px solid rgba(0,255,65,.07);border-radius:3px;padding:1rem 1.25rem;font-size:11px;color:var(--green-d);overflow-x:auto;white-space:pre;line-height:1.8}
+.content-block{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.content-block:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.content-heading{font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;margin-bottom:.5rem}
+.content-body{font-size:12px;color:var(--text-2);line-height:2}
+.results-list{display:flex;flex-direction:column;gap:.6rem}
+.result{display:flex;align-items:flex-start;gap:.85rem;padding:.9rem 1.1rem;border-radius:3px;border:1px solid;font-size:12px;line-height:1.8}
+.result.success{background:rgba(0,255,65,.04);border-color:rgba(0,255,65,.12);color:var(--text-2)}
+.result.success .ri{color:var(--green);flex-shrink:0}
+.result.warning{background:rgba(255,214,0,.04);border-color:rgba(255,214,0,.12);color:var(--text-2)}
+.result.warning .ri{color:var(--amber);flex-shrink:0}
+.result.fix{background:rgba(0,229,255,.04);border-color:rgba(0,229,255,.12);color:var(--text-2)}
+.result.fix .ri{color:var(--cyan);flex-shrink:0}
+.result.fail{background:rgba(255,68,68,.04);border-color:rgba(255,68,68,.12);color:var(--text-2)}
+.result.fail .ri{color:var(--red);flex-shrink:0}
+.lessons-list{display:flex;flex-direction:column;gap:1rem}
+.lesson{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:1.25rem;transition:border-color .2s}
+.lesson:hover{border-color:var(--border-s)}
+.lesson-n{font-size:9px;color:var(--text-m);letter-spacing:.15em;margin-bottom:.35rem}
+.lesson-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:.4rem}
+.lesson-text{font-size:12px;color:var(--text-2);line-height:1.9}
+.screenshots{display:flex;flex-direction:column;gap:1.5rem}
+.screenshot-item{display:flex;flex-direction:column;gap:.6rem}
+.screenshot-item img{width:100%;border-radius:4px;border:1px solid rgba(0,255,65,.1);display:block}
+.screenshot-caption{font-size:10px;color:var(--text-m);letter-spacing:.08em;padding-left:.25rem}
+.screenshot-placeholder{background:var(--bg-card);border:1px dashed rgba(0,255,65,.15);border-radius:4px;padding:2.5rem;text-align:center;font-size:11px;color:var(--text-m);letter-spacing:.05em}
+footer{position:relative;z-index:1;text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--text-m);font-size:10px;letter-spacing:.1em}
+@media(max-width:620px){main{padding:5rem 1.25rem 3rem}nav{padding:0 1.25rem}.proj-title{font-size:1.5rem}.topo-diagram{font-size:9px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a id="nav-back" href="#" class="nav-back">Back to Portfolio</a>
+  <span class="nav-id" id="nav-id"></span>
+</nav>
+
+<main>
+  <header class="proj-header" id="proj-header"></header>
+
+  <div class="section">
+    <div class="sh">cat client_brief.txt</div>
+    <div id="client-card"></div>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat objectives.txt</div>
+    <div class="obj-list" id="obj-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat tools.txt</div>
+    <table class="tools-table">
+      <thead><tr><th>TOOL / TECHNOLOGY</th><th>PURPOSE</th></tr></thead>
+      <tbody id="tools-body"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat skills.txt</div>
+    <div class="tags-wrap" id="tags-wrap"></div>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat topology.txt</div>
+    <div class="topo-wrap">
+      <pre class="topo-diagram">  [Internet]
+       |
+  [Clinic-R1: S0/0/0 WAN / G0/0: 192.168.1.1]
+       |  (ACLs applied)
+  [Clinic-SW1: 192.168.1.2]
+    /      |        |        \
+[Win-WS] [Linux]  [Admin]  [WAP]
+192.168   .100     .50      |
+.1.10/20           Staff VLAN 10: 192.168.10.x
+(port security)    Guest VLAN 20: 192.168.20.x (isolated)</pre>
+      <table class="topo-table">
+        <thead><tr><th>DEVICE</th><th>IP ADDRESS</th><th>ROLE</th><th>SECURITY CONTROL</th></tr></thead>
+        <tbody>
+          <tr><td class="topo-hl">Clinic-R1</td><td class="topo-ip">192.168.1.1</td><td>Gateway / firewall</td><td class="topo-sec">ACLs APPLIED</td></tr>
+          <tr><td class="topo-hl">Clinic-SW1</td><td class="topo-ip">192.168.1.2</td><td>Access layer switch</td><td class="topo-sec">PORT SECURITY</td></tr>
+          <tr><td class="topo-hl">Win-WS</td><td class="topo-ip">192.168.1.10</td><td>Windows workstation</td><td class="topo-sec">HARDENED</td></tr>
+          <tr><td class="topo-hl">Linux Server</td><td class="topo-ip">192.168.1.100</td><td>Ubuntu patient DB server</td><td class="topo-sec">HARDENED</td></tr>
+          <tr><td class="topo-hl">Admin-PC</td><td class="topo-ip">192.168.1.50</td><td>Admin workstation</td><td class="topo-sec">SSH MANAGEMENT</td></tr>
+          <tr><td class="topo-hl">Staff Wi-Fi</td><td class="topo-ip">192.168.10.x</td><td>Staff wireless (VLAN 10)</td><td class="topo-sec">WPA2 HIDDEN SSID</td></tr>
+          <tr><td class="topo-hl">Guest Wi-Fi</td><td class="topo-ip">192.168.20.x</td><td>Patient waiting room (VLAN 20)</td><td class="topo-sec">ISOLATED</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat assessment_parts.txt</div>
+    <div id="parts-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="sh">cat results.txt</div>
+    <div class="results-list" id="results-list"></div>
+  </div>
+
+  <!--
+  ==============================================================
+  SCREENSHOTS SECTION -- HOW TO ADD YOUR IMAGES
+  ==============================================================
+
+  FOLDER STRUCTURE:
+    endpoint-security/
+    |-- index.html
+    |-- README.md
+    |-- topology.pkt
+    +-- images/
+        |-- topology.png
+        |-- acl-verification.png
+        |-- port-security.png
+        |-- wireless-isolation.png
+        |-- windows-event-viewer.png
+        |-- windows-firewall.png
+        +-- linux-ufw-status.png
+
+  RECOMMENDED SCREENSHOTS:
+  - Full topology in Packet Tracer
+  - show ip access-lists output (ACL hit counts)
+  - show port-security output on Clinic-SW1
+  - Guest ping to clinic LAN blocked (BLOCKED result)
+  - Windows Event Viewer showing Event ID 4625
+  - Windows Defender status
+  - sudo ufw status verbose on Linux server
+
+  WHEN READY:
+  1. Delete the placeholder div below
+  2. Remove the comment markers around the screenshots block
+  3. Update src filenames to match your actual files
+  ==============================================================
+  -->
+
+  <div class="section">
+    <div class="sh">ls ./evidence/</div>
+
+    <div class="screenshots">
+
+      <div class="screenshot-item">
+        <img src="topology.png" alt="Clinic network topology">
+        <span class="screenshot-caption">// Fig 1 - ClearMed Clinic network topology in Cisco Packet Tracer</span>
+      </div>
+
+      <div class="screenshot-item">
+        <img src="acl-verification.png" alt="ACL verification">
+        <span class="screenshot-caption">// Fig 2 - show ip access-lists confirming ACL hit counts</span>
+      </div>
+
+      <div class="screenshot-item">
+        <img src="port-security.png" alt="Port security">
+        <span class="screenshot-caption">// Fig 3 - show port-security on Clinic-SW1</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="sh">cat lessons_learned.txt</div>
+    <div class="lessons-list" id="lessons-list"></div>
+  </div>
+
+</main>
+
+<footer id="footer"></footer>
+
+<script>
+var sl = { soon:'COMING SOON', wip:'IN PROGRESS', live:'LIVE' };
+var ri = { success:'v', warning:'!', fix:'+', fail:'x' };
+
+if(PROJECT.portfolioLink) document.getElementById('nav-back').href = PROJECT.portfolioLink;
+document.getElementById('nav-id').textContent = 'CLEARMED CLINIC -- ENDPOINT SECURITY ASSESSMENT';
+
+var gh  = PROJECT.githubLink    ? '<a href="' + PROJECT.githubLink + '" target="_blank" class="btn btn-p">View on GitHub</a>' : '';
+var pfl = PROJECT.portfolioLink ? '<a href="' + PROJECT.portfolioLink + '" class="btn btn-s">Back to Portfolio</a>' : '';
+document.getElementById('proj-header').innerHTML =
+  '<div class="proj-meta">' +
+    '<span class="meta-cat">CYBERSECURITY</span>' +
+    '<span class="meta-status ' + PROJECT.status + '">' + (sl[PROJECT.status] || PROJECT.status.toUpperCase()) + '</span>' +
+    '<span class="meta-source">CISCO ENDPOINT SECURITY · JUNIOR CYBERSECURITY ANALYST PATH</span>' +
+    '<span class="meta-date">' + PROJECT.date + ' by ' + PROJECT.author + '</span>' +
+  '</div>' +
+  '<h1 class="proj-title">' + PROJECT.title + '</h1>' +
+  '<p class="proj-overview">' + PROJECT.overview + '</p>' +
+  ((gh || pfl) ? '<div class="proj-actions">' + gh + pfl + '</div>' : '');
+
+var cc = document.getElementById('client-card');
+cc.innerHTML =
+  '<div class="client-card">' +
+    '<div class="client-row"><span class="client-label">CLIENT</span><span class="client-val">' + PROJECT.client.name + '</span></div>' +
+    '<div class="client-row"><span class="client-label">INDUSTRY</span><span class="client-val">' + PROJECT.client.industry + '</span></div>' +
+    '<div class="client-row"><span class="client-label">SITE</span><span class="client-val">' + PROJECT.client.site + '</span></div>' +
+    '<div class="client-row"><span class="client-label">TASK</span><span class="client-val">' + PROJECT.client.task + '</span></div>' +
+  '</div>' +
+  '<div class="client-trigger"><div class="client-trigger-label">INCIDENT TRIGGER</div>' + PROJECT.client.context + '</div>';
+
+var ol = document.getElementById('obj-list');
+PROJECT.objectives.forEach(function(o, i) {
+  ol.innerHTML += '<div class="obj-item"><span class="obj-num">' + String(i+1).padStart(2,'0') + '.</span><span>' + o + '</span></div>';
+});
+
+var tb = document.getElementById('tools-body');
+PROJECT.tools.forEach(function(t) {
+  tb.innerHTML += '<tr><td class="tool-name">' + t.name + '</td><td>' + t.purpose + '</td></tr>';
+});
+
+var tw = document.getElementById('tags-wrap');
+PROJECT.skills.forEach(function(s) {
+  tw.innerHTML += '<span class="tag">' + s + '</span>';
+});
+
+var pl = document.getElementById('parts-list');
+PROJECT.parts.forEach(function(p) {
+  var body = '';
+  if (p.type === 'lab') {
+    body = '<div class="part-desc">' + p.desc + '</div>';
+    if (p.code) body += '<pre class="part-code">' + p.code + '</pre>';
+  } else {
+    body = '<div class="part-desc">' + p.desc + '</div>';
+    if (p.content) {
+      p.content.forEach(function(c) {
+        body += '<div class="content-block"><div class="content-heading">' + c.heading + '</div><div class="content-body">' + c.body + '</div></div>';
+      });
+    }
+  }
+  pl.innerHTML +=
+    '<div class="part">' +
+      '<div class="part-header">' +
+        '<div class="part-id">' + p.id + '</div>' +
+        '<div class="part-modules">' + p.modules + '</div>' +
+        '<div class="part-title">' + p.title + '</div>' +
+      '</div>' +
+      '<div class="part-body">' + body + '</div>' +
+    '</div>';
+});
+
+var rl = document.getElementById('results-list');
+PROJECT.results.forEach(function(r) {
+  rl.innerHTML += '<div class="result ' + r.type + '"><span class="ri">' + (ri[r.type] || '.') + '</span><span>' + r.text + '</span></div>';
+});
+
+var ll = document.getElementById('lessons-list');
+PROJECT.lessons.forEach(function(l, i) {
+  ll.innerHTML +=
+    '<div class="lesson">' +
+      '<div class="lesson-n">LESSON ' + String(i+1).padStart(2,'0') + '</div>' +
+      '<div class="lesson-title">' + l.title + '</div>' +
+      '<div class="lesson-text">' + l.text + '</div>' +
+    '</div>';
+});
+
+var lnk = PROJECT.authorLinkedIn
+  ? '<a href="' + PROJECT.authorLinkedIn + '" style="color:var(--green-d);text-decoration:none">' + PROJECT.author + '</a>'
+  : PROJECT.author;
+document.getElementById('footer').innerHTML =
+  '<p>' + lnk + ' &nbsp;.&nbsp; CYBERSECURITY PROJECT &nbsp;.&nbsp; CISCO ENDPOINT SECURITY &nbsp;.&nbsp; <span style="color:var(--green)">LIVE</span></p>';
+</script>
+</body>
+</html>
