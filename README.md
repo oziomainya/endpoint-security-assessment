@@ -7,6 +7,7 @@
 > **Course:** Cisco Endpoint Security · Junior Cybersecurity Analyst Career Path
 > 
 > **Author:** Ozioma Inya         <!-- REPLACE with your name -->
+> 
 > **Date:** August, 2025              <!-- REPLACE e.g. "April, 2025" -->
 
 ---
